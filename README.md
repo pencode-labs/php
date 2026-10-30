@@ -92,13 +92,16 @@ channel. An explicit debugger `command`/`args` overrides the contributed launche
 Requires Go 1.27.0 or newer and the current Pencode peb v14 SDK.
 
 ```sh
+git clone https://github.com/pencode-labs/php.git
+cd php
 go build -o bin/php .
 go test -race ./...
 ```
 
 Choose **Install from local directory** in Pencode and select this directory.
 On Windows build `bin/php.exe` and change the manifest entry accordingly. The
-repository's `make install-extensions` builds and installs this extension along
+[Pencode repository](https://github.com/pencode-labs/pencode)'s
+`make install-extensions` builds and installs this extension along
 with the others, adjusting executable suffixes automatically.
 
 ## Porting notes and license
@@ -114,3 +117,15 @@ without a recognized suffix cannot be selected by shebang through PEB v10.
 Apache-2.0; see [LICENSE](LICENSE). Upstream copyright 2022–2025 Zed Industries,
 Inc. The Go implementation and Pencode integration are modifications made in
 2026 by Pencode Labs.
+
+## Releases
+
+Push a `v*` tag (for example, `v0.1.0`) to the PHP extension repository, or publish a GitHub Release,
+to test and build Linux, macOS and Windows packages for amd64 and arm64. The workflow
+uploads ZIP archives and `SHA256SUMS` to the matching release, creating it if needed.
+Prerelease tags such as `v0.1.0-rc.1` create prereleases.
+
+Each ZIP contains `bin/`, `resources/`, the README and license. Its manifest uses the
+tag version and the correct executable suffix for Windows. Download the package
+for the workspace server's OS and architecture, extract it, then install the
+extracted directory through Pencode's extension manager.
