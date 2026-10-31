@@ -92,7 +92,7 @@ channel. An explicit debugger `command`/`args` overrides the contributed launche
 Requires Go 1.27.0 or newer and the current Pencode peb v14 SDK.
 
 ```sh
-git clone https://github.com/pencode-labs/php.git
+git clone git@github.com:pencode-labs/php.git
 cd php
 go build -o bin/php .
 go test -race ./...
