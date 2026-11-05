@@ -21,9 +21,9 @@ type toolCommand struct {
 }
 
 type toolManager struct {
-	directory string
-	client    *http.Client
 	log       io.Writer
+	client    *http.Client
+	directory string
 }
 
 func newTools() (*toolManager, error) {
