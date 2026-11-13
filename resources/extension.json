@@ -1,7 +1,7 @@
 {
   "id": "php",
   "name": "PHP",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "Pencode",
   "description": "为 PHP 和 Blade 模板提供代码补全、错误诊断、定义跳转、引用查找、重命名与格式化。集成 Xdebug 调试，支持运行当前 PHP 文件或监听外部请求，查看断点、调用栈和变量。",
   "entry": "bin/php"
