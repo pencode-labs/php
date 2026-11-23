@@ -1,50 +1,7 @@
 # PHP
 
-PHP and Blade support for Pencode, ported from
-[zed-extensions/php](https://github.com/zed-extensions/php), upstream commit
-`6768398bea34ea3b2ad590ac8081eb6c1ce6bf29` (version 0.5.4).
-
-The extension registers one language server per workspace, shared by `.php`,
-`.phtml`, `.phpt` and `.blade.php` documents. Blade uses the `blade` LSP language
-ID. Completion, diagnostics, navigation, references, rename, formatting and code
-actions use Pencode's existing LSP client. Syntax highlighting uses Pencode's
-built-in PHP grammar and the active editor theme.
-
-## Language servers
-
-Intelephense is enabled by default. Set `PENCODE_PHP_LANGUAGE_SERVER` on the
-workspace machine before starting Pencode or its remote server, then reload the
-extension to choose another server:
-
-| Value | Installation when missing | Prerequisites |
-| --- | --- | --- |
-| `intelephense` | npm package `intelephense` | Node.js and npm |
-| `phptools` | npm package `devsense-php-ls` and its native platform package | Node.js and npm for installation |
-| `phpactor` | `phpactor.phar` from the latest Phpactor GitHub release | PHP compatible with the selected release |
-| `phpantom` | Native binary from the latest PHPantom GitHub release | Supported release platform |
-
-Existing `intelephense`, `phptools`, `phpactor` and `phpantom_lsp` executables in
-PATH take priority. Managed installations live in
-`<UserCacheDir>/pencode/php/<tool>`. Override the cache location with
-`PENCODE_PHP_TOOLS_DIR`. Tools are installed on first use, with a ten-minute
-deadline; registration never downloads tools. Finished installs are published
-atomically and reused without network checks or automatic upgrades. Remove a
-tool's cache directory while it is stopped to reinstall it. Tool errors and
-installation logs appear in the language server's Output channel.
-
-Optional workspace-host environment variables:
-
-| Variable | Meaning |
-| --- | --- |
-| `PENCODE_PHP_SERVER_COMMAND` | Custom language server executable, preferably an absolute path; bypasses installation |
-| `PENCODE_PHP_SERVER_ARGS` | JSON string array; appended to the managed/default arguments, or used as the complete arguments for a custom command |
-| `PENCODE_PHP_CONFIGURATION` | LSP workspace configuration JSON, e.g. `{"intelephense":{"files":{"maxSize":2000000}}}` |
-| `PENCODE_PHP_INITIALIZATION_OPTIONS` | LSP initialization options JSON |
-| `PENCODE_PHP_XDEBUG_PATH` | Absolute path to an existing `extension/out/phpDebug.js`; bypasses adapter download |
-
-PhpTools and PHPantom native downloads support Linux, macOS and Windows on
-amd64/arm64 when the upstream release provides the corresponding asset.
-Third-party language server licensing remains governed by each provider.
+The extension integrates Xdebug with Pencode’s debugger. Configure PHP and Blade
+language services in Pencode under **设置 → 语言服务器 → PHP**.
 
 ## Xdebug
 
@@ -53,6 +10,10 @@ the workspace machine. On first launch it downloads the latest
 `xdebug/vscode-php-debug` VSIX from GitHub, extracts the adapter and its bundled
 dependencies, and runs `extension/out/phpDebug.js` through Node.js. Xdebug itself
 must be installed and enabled in the PHP runtime separately.
+
+The adapter is cached in `<UserCacheDir>/pencode/php/xdebug` on the workspace
+machine. Set `PENCODE_PHP_TOOLS_DIR` to change the cache root, or set
+`PENCODE_PHP_XDEBUG_PATH` to the path of an existing `extension/out/phpDebug.js`.
 
 To run a PHP CLI file, open it and choose **添加启动器 → PHP: 当前文件** in Debug.
 The generated JSON uses `${file}` and `${fileDirname}`, resolved from the selected
@@ -106,13 +67,9 @@ with the others, adjusting executable suffixes automatically.
 
 ## Porting notes and license
 
-This port replaces Zed's Rust/WASM API with Pencode's Go SDK and process
-launchers. The server package names, launch arguments, platform asset names,
-file suffixes and Xdebug adapter are adapted from upstream. Pencode does not
-currently expose extension hooks for Zed's completion label styling, PHPDoc
-injections, bracket/indent/outline/text-object queries, tasks or debug schema;
-those editor-specific resources are not registered by this port. PHP files
-without a recognized suffix cannot be selected by shebang through PEB v10.
+The Xdebug integration is adapted from
+[zed-extensions/php](https://github.com/zed-extensions/php), upstream commit
+`6768398bea34ea3b2ad590ac8081eb6c1ce6bf29` (version 0.5.4).
 
 Apache-2.0; see [LICENSE](LICENSE). Upstream copyright 2022–2025 Zed Industries,
 Inc. The Go implementation and Pencode integration are modifications made in

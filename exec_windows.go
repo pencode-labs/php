@@ -13,18 +13,13 @@ import (
 
 func launch(path string, args []string) error {
 	cmd := exec.Command(path, args...)
-	hideWindow(cmd)
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
 	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
 	return cmd.Run()
 }
 
-// hideWindow keeps tool probes, installations and language/debug servers quiet.
-func hideWindow(cmd *exec.Cmd) {
-	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
-}
-
 // The OS closes this job handle when the extension process exits or is killed.
-// All installed tool and compiler descendants belong to the same lifetime.
+// The debug adapter and its descendants belong to the same lifetime.
 func ownProcesses() error {
 	job, err := windows.CreateJobObject(nil, nil)
 	if err != nil {
